@@ -24,7 +24,7 @@ export class RestfulRepository<T extends Record<string, any>> {
     >;
   } = {};
 
-  public async load<K extends string & keyof T>(key: K): Promise<T[K]> {
+  public load<K extends string & keyof T>(key: K): Promise<T[K]> {
     {
       const currentSubject = this.store[key];
 
