@@ -1,6 +1,6 @@
 {
   "name": "datading",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A library to simplify and optimize data fetching in React",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
