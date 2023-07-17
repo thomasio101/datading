@@ -24,16 +24,22 @@ export class RestfulRepository<T extends Record<string, any>> {
     >;
   } = {};
 
-  public load<K extends string & keyof T>(key: K): Promise<T[K]> {
+  constructor(public readonly baseUrl: string = "") {}
+
+  private getSubject<K extends string & keyof T>(
+    key: K
+  ): BehaviorSubjectWithMetadata<FetchResult<T[K]>, Promise<T[K]>> {
     {
       const currentSubject = this.store[key];
 
-      if (currentSubject !== undefined) return currentSubject.metadata;
+      if (currentSubject !== undefined) return currentSubject;
     }
 
     const promise = fetch(new URL(key, this.baseUrl)).then(
       (response) => response.json() as Promise<T[K]>
     );
+
+    let subject;
 
     from(promise)
       .pipe(
@@ -45,16 +51,19 @@ export class RestfulRepository<T extends Record<string, any>> {
         catchError(() => $ERROR)
       )
       .subscribe(
-        (this.store[key] = new BehaviorSubjectWithMetadata<
-          FetchResult<T[K]>,
-          Promise<T[K]>
-        >(LOADING, promise))
+        (subject = this.store[key] =
+          new BehaviorSubjectWithMetadata<FetchResult<T[K]>, Promise<T[K]>>(
+            LOADING,
+            promise
+          ))
       );
 
-    return promise;
+    return subject;
   }
 
-  constructor(public readonly baseUrl: string = "") {}
+  public load<K extends string & keyof T>(key: K): Promise<T[K]> {
+    return this.getSubject(key).metadata;
+  }
 
   public use<K extends keyof T>(key: K): T[K] {
     throw new Error("RestfulRepository.use hasn't been implemented.");
