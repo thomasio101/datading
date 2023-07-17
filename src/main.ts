@@ -1,3 +1,4 @@
+import { useBehaviorSubjectValue } from "haakje";
 import { BehaviorSubject, catchError, from, map, of } from "rxjs";
 
 interface FetchResult<T> {
@@ -65,7 +66,7 @@ export class RestfulRepository<T extends Record<string, any>> {
     return this.getSubject(key).metadata;
   }
 
-  public use<K extends keyof T>(key: K): T[K] {
-    throw new Error("RestfulRepository.use hasn't been implemented.");
+  public use<K extends string & keyof T>(key: K): FetchResult<T[K]> {
+    return useBehaviorSubjectValue(this.getSubject(key));
   }
 }
