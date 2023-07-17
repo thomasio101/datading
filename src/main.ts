@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable, catchError, from, map, of } from "rxjs";
+import { BehaviorSubject, catchError, from, map, of } from "rxjs";
 
 interface FetchResult<T> {
   value: T | undefined;
@@ -10,12 +10,27 @@ const ERROR = { value: undefined, loading: false, error: true } as const;
 const $ERROR = of(ERROR);
 const LOADING = { value: undefined, loading: true, error: false } as const;
 
+class BehaviorSubjectWithMetadata<T, M> extends BehaviorSubject<T> {
+  constructor(value: T, public readonly metadata: M) {
+    super(value);
+  }
+}
+
 export class RestfulRepository<T extends Record<string, any>> {
   private readonly store: {
-    [k in keyof T]?: Observable<FetchResult<T[k]>>;
+    [k in keyof T]?: BehaviorSubjectWithMetadata<
+      FetchResult<T[k]>,
+      Promise<T[k]>
+    >;
   } = {};
 
   public async load<K extends string & keyof T>(key: K): Promise<T[K]> {
+    {
+      const currentSubject = this.store[key];
+
+      if (currentSubject !== undefined) return currentSubject.metadata;
+    }
+
     const promise = fetch(new URL(key, this.baseUrl)).then(
       (response) => response.json() as Promise<T[K]>
     );
@@ -30,7 +45,10 @@ export class RestfulRepository<T extends Record<string, any>> {
         catchError(() => $ERROR)
       )
       .subscribe(
-        (this.store[key] = new BehaviorSubject<FetchResult<T[K]>>(LOADING))
+        (this.store[key] = new BehaviorSubjectWithMetadata<
+          FetchResult<T[K]>,
+          Promise<T[K]>
+        >(LOADING, promise))
       );
 
     return promise;
