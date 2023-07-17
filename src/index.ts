@@ -7,9 +7,17 @@ interface FetchResult<T> {
   error: boolean;
 }
 
-const ERROR = { value: undefined, loading: false, error: true } as const;
+const ERROR = {
+  value: undefined,
+  loading: false,
+  error: true,
+} as const satisfies FetchResult<undefined>;
 const $ERROR = of(ERROR);
-const LOADING = { value: undefined, loading: true, error: false } as const;
+const LOADING = {
+  value: undefined,
+  loading: true,
+  error: false,
+} as const satisfies FetchResult<undefined>;
 
 class BehaviorSubjectWithMetadata<T, M> extends BehaviorSubject<T> {
   constructor(value: T, public readonly metadata: M) {
