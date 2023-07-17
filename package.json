@@ -1,0 +1,32 @@
+{
+  "name": "datading",
+  "version": "0.0.1",
+  "description": "A library to simplify and optimize data fetching in React",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thomasio101/datading.git"
+  },
+  "keywords": [
+    "data",
+    "fetching",
+    "react",
+    "haakje",
+    "async",
+    "hooks"
+  ],
+  "author": "Tess Ellenoir Duursma (TheVanuPhantom)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thomasio101/datading/issues"
+  },
+  "homepage": "https://github.com/thomasio101/datading#readme",
+  "dependencies": {
+    "rxjs": "^7.8.1",
+    "typescript": "^5.1.6"
+  }
+}
