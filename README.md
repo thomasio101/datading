@@ -33,7 +33,7 @@ interface User {
 }
 
 const repository = new RestfulRepository<
-  Record<`posts/${number}`> & Record<`users/${number}`, User>
+  Record<`posts/${number}`, Post> & Record<`users/${number}`, User>
 >("https://jsonplaceholder.typicode.com");
 ```
 
