@@ -1,4 +1,4 @@
-import { Axios } from "axios";
+import axios, { AxiosInstance } from "axios";
 import { useBehaviorSubjectValue } from "haakje";
 import { BehaviorSubject, catchError, from, map, of } from "rxjs";
 
@@ -27,7 +27,7 @@ class BehaviorSubjectWithMetadata<T, M> extends BehaviorSubject<T> {
 }
 
 export class RestfulRepository<T extends Record<string, any>> {
-  private readonly axios: Axios;
+  private readonly axios: AxiosInstance;
   private readonly store: {
     [k in keyof T]?: BehaviorSubjectWithMetadata<
       FetchResult<T[k]>,
@@ -36,7 +36,7 @@ export class RestfulRepository<T extends Record<string, any>> {
   } = {};
 
   constructor(public readonly baseURL: string = "") {
-    this.axios = new Axios({ baseURL: baseURL });
+    this.axios = axios.create({ baseURL: baseURL });
   }
 
   private getSubject<K extends string & keyof T>(
