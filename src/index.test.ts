@@ -1,5 +1,5 @@
 import { restfulRepositoryFixture } from "./utils/testing";
-import { renderHook } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react";
 import { sleep } from "./utils/time";
 
 test(
@@ -9,7 +9,7 @@ test(
 
     expect(result.current.value).toBe(undefined);
 
-    await sleep(250);
+    await act(async () => await sleep(250));
 
     expect(result.current.value).toBeDefined();
     expect(result.current.value!.id).toBe(1);
