@@ -187,11 +187,11 @@ export function restfulRepositoryFixture(
           case "string":
             return address;
           case "object":
-            return `${address.address}:${address.port}`;
+            return `localhost:${address.port}`;
         }
       })();
 
-      await callback(new RestfulRepository<Model>(address));
+      await callback(new RestfulRepository<Model>("http://" + address));
     } finally {
       listener.close();
     }
