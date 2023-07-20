@@ -160,7 +160,7 @@ export function restfulRepositoryFixture(
   app.use(cors());
 
   for (const key of ["posts", "users"] as const) {
-    app.get(`${key}/:id`, (req, res) => {
+    app.get(`/${key}/:id`, (req, res) => {
       const id = parseInt(req.params.id);
 
       if (isNaN(id) || id > 10 || id < 1) res.status(404).end();
