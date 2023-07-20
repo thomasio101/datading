@@ -33,7 +33,7 @@ export class RestfulRepository<T extends Record<string, any>> {
     >;
   } = {};
 
-  constructor(public readonly baseUrl: string = "") {}
+  constructor(public readonly baseURL: string = "") {}
 
   private getSubject<K extends string & keyof T>(
     key: K
@@ -44,7 +44,7 @@ export class RestfulRepository<T extends Record<string, any>> {
       if (currentSubject !== undefined) return currentSubject;
     }
 
-    const promise = fetch(new URL(key, this.baseUrl)).then(
+    const promise = fetch(new URL(key, this.baseURL)).then(
       (response) => response.json() as Promise<T[K]>
     );
 
