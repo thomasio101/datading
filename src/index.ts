@@ -1,3 +1,4 @@
+import { Axios } from "axios";
 import { useBehaviorSubjectValue } from "haakje";
 import { BehaviorSubject, catchError, from, map, of } from "rxjs";
 
@@ -26,6 +27,7 @@ class BehaviorSubjectWithMetadata<T, M> extends BehaviorSubject<T> {
 }
 
 export class RestfulRepository<T extends Record<string, any>> {
+  private readonly axios: Axios;
   private readonly store: {
     [k in keyof T]?: BehaviorSubjectWithMetadata<
       FetchResult<T[k]>,
@@ -33,7 +35,9 @@ export class RestfulRepository<T extends Record<string, any>> {
     >;
   } = {};
 
-  constructor(public readonly baseURL: string = "") {}
+  constructor(public readonly baseURL: string = "") {
+    this.axios = new Axios({ baseURL: baseURL });
+  }
 
   private getSubject<K extends string & keyof T>(
     key: K
@@ -44,9 +48,9 @@ export class RestfulRepository<T extends Record<string, any>> {
       if (currentSubject !== undefined) return currentSubject;
     }
 
-    const promise = fetch(new URL(key, this.baseURL)).then(
-      (response) => response.json() as Promise<T[K]>
-    );
+    const promise = this.axios
+      .get(key)
+      .then((response) => response.data as T[K]);
 
     let subject;
 
