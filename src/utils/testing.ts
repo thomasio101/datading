@@ -165,7 +165,7 @@ export function restfulRepositoryFixture(
 
       if (isNaN(id) || id > 10 || id < 1) res.status(404).end();
       else {
-        const data = Model[key][id];
+        const data = Model[key][id - 1];
 
         res.json(data);
       }
