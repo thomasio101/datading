@@ -61,7 +61,10 @@ export class RestfulRepository<T extends Record<string, any>> {
           loading: false,
           error: false,
         })),
-        catchError(() => $ERROR)
+        catchError((error) => {
+          console.error(error);
+          return $ERROR;
+        })
       )
       .subscribe(
         (subject = this.store[key] =
