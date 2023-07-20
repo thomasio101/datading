@@ -1,3 +1,4 @@
+import cors from "cors";
 import express from "express";
 import { RestfulRepository } from "..";
 
@@ -155,6 +156,8 @@ export function restfulRepositoryFixture(
   callback: RestfulRepositoryTestCallback
 ): jest.ProvidesCallback {
   const app = express();
+
+  app.use(cors());
 
   for (const key of ["posts", "users"] as const) {
     app.get(`${key}/:id`, (req, res) => {
